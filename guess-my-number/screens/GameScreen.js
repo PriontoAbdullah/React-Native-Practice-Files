@@ -1,6 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
-import { Alert, FlatList, StyleSheet, View } from 'react-native';
+import {
+  Alert,
+  FlatList,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import GuessLogItem from '../components/game/GuessLogItem';
 import NumberContainer from '../components/game/NumberContainer';
 import Card from '../components/UI/Card';
@@ -27,6 +33,7 @@ const GameScreen = ({ userChoice, onGameOver }) => {
   const initialGuess = generateRandomBetween(1, 100, userChoice);
   const [currentGuess, setCurrentGuess] = useState(initialGuess);
   const [guessRounds, setGuessRounds] = useState([initialGuess]);
+  const { width } = useWindowDimensions();
 
   useEffect(() => {
     minBoundary = 1;
@@ -67,10 +74,8 @@ const GameScreen = ({ userChoice, onGameOver }) => {
 
   const guessRoundsListLength = guessRounds.length;
 
-  return (
-    <View style={styles.screen}>
-      <Title>Opponent's Guess</Title>
-      {/* GUESS */}
+  let content = (
+    <>
       <NumberContainer style={styles.guessContainer}>
         {currentGuess}
       </NumberContainer>
@@ -95,6 +100,42 @@ const GameScreen = ({ userChoice, onGameOver }) => {
           </View>
         </View>
       </Card>
+    </>
+  );
+
+  if (width > 500) {
+    content = (
+      <>
+        <View style={styles.buttonsContainerWide}>
+          <View style={styles.buttonContainer}>
+            <PrimaryButton
+              style={styles.primaryButton}
+              onPressHandler={() => nextGuessHandler('lower')}
+            >
+              <Ionicons name="md-remove" size={24} color={Color.accent500} />
+            </PrimaryButton>
+          </View>
+          <NumberContainer style={styles.guessContainer}>
+            {currentGuess}
+          </NumberContainer>
+          <View style={styles.buttonContainer}>
+            <PrimaryButton
+              style={styles.primaryButton}
+              onPressHandler={() => nextGuessHandler('higher')}
+            >
+              <Ionicons name="md-add" size={24} color={Color.accent500} />
+            </PrimaryButton>
+          </View>
+        </View>
+      </>
+    );
+  }
+
+  return (
+    <View style={styles.screen}>
+      <Title>Opponent's Guess</Title>
+      {/* GUESS */}
+      {content}
       <View style={styles.listContainer}>
         <FlatList
           data={guessRounds}
@@ -117,6 +158,7 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     padding: 24,
+    alignItems: 'center',
   },
   title: {
     fontSize: 24,
@@ -129,6 +171,10 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     flexDirection: 'row',
+  },
+  buttonsContainerWide: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   buttonContainer: {
     flex: 1,

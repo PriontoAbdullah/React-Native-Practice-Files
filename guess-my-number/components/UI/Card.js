@@ -1,11 +1,26 @@
-import { StyleSheet, View } from 'react-native';
+import {
+  Dimensions,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import Color from '../../constants/colors';
 
 const Card = ({ children }) => {
-  return <View style={styles.cardContainer}>{children}</View>;
+  const { height } = useWindowDimensions();
+
+  return (
+    <View
+      style={[styles.cardContainer, { width: height < 500 ? '50%' : '85%' }]}
+    >
+      {children}
+    </View>
+  );
 };
 
 export default Card;
+
+const deviceWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
   cardContainer: {
@@ -14,7 +29,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 24,
     borderRadius: 8,
     padding: 16,
-    marginTop: 20,
+    marginTop: deviceWidth < 380 ? 10 : 15,
     backgroundColor: Color.primary800,
     // shadow for Android
     elevation: 4,

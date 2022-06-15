@@ -6,10 +6,11 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 
 import CategoriesScreen from './screens/CategoriesScreen';
+import FavoriteMealsScreen from './screens/FavoriteMealsScreen';
 import MealDetailsScreen from './screens/MealDetailsScreen';
 import MealsOverviewScreen from './screens/MealsOverviewScreen';
 import UserScreen from './screens/UserScreen';
-import WelcomeScreen from './screens/WelcomeScreen';
+import FavoritesContextProvider from './store/context/favorites-context';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -33,19 +34,19 @@ const TabComponent = () => {
       }}
     >
       <Tab.Screen
-        name="Welcome"
-        component={WelcomeScreen}
+        name="MealsCategories"
+        component={CategoriesScreen}
         options={{
+          title: 'Meals Categories',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" color={color} size={size} />
           ),
         }}
       />
       <Tab.Screen
-        name="MealsCategories"
-        component={CategoriesScreen}
+        name="Favorites"
+        component={FavoriteMealsScreen}
         options={{
-          title: 'Meals Categories',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="star" color={color} size={size} />
           ),
@@ -68,45 +69,47 @@ const App = () => {
   return (
     <>
       <StatusBar style="light" />
-      <NavigationContainer>
-        <Stack.Navigator
-          screenOptions={{
-            headerStyle: {
-              backgroundColor: '#351401',
-              borderBottomWidth: 0,
-            },
-            headerTintColor: '#fff',
-            contentStyle: {
-              backgroundColor: '#3f2f25',
-            },
-          }}
-        >
-          <Stack.Screen
-            name="MealsCategories"
-            component={TabComponent}
-            options={{
-              title: 'Meals Categories',
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="MealsOverview"
-            component={MealsOverviewScreen}
-            options={{
-              headerRight: () => {
-                return (
-                  <View style={{ marginRight: 10 }}>
-                    <Text style={{ color: '#fff', fontSize: 20 }}>
-                      {'\u2B50'}
-                    </Text>
-                  </View>
-                );
+      <FavoritesContextProvider>
+        <NavigationContainer>
+          <Stack.Navigator
+            screenOptions={{
+              headerStyle: {
+                backgroundColor: '#351401',
+                borderBottomWidth: 0,
+              },
+              headerTintColor: '#fff',
+              contentStyle: {
+                backgroundColor: '#3f2f25',
               },
             }}
-          />
-          <Stack.Screen name="MealDetails" component={MealDetailsScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
+          >
+            <Stack.Screen
+              name="MealsComponents"
+              component={TabComponent}
+              options={{
+                title: 'Meals Categories',
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="MealsOverview"
+              component={MealsOverviewScreen}
+              options={{
+                headerRight: () => {
+                  return (
+                    <View style={{ marginRight: 10 }}>
+                      <Text style={{ color: '#fff', fontSize: 20 }}>
+                        {'\u2B50'}
+                      </Text>
+                    </View>
+                  );
+                },
+              }}
+            />
+            <Stack.Screen name="MealDetail" component={MealDetailsScreen} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </FavoritesContextProvider>
     </>
   );
 };

@@ -7,7 +7,8 @@ import {
   Text,
   View,
 } from 'react-native';
-import MealDetails from './MealDetails';
+
+import MealDetails from '../MealDetails';
 
 function MealItem({
   id,
@@ -19,31 +20,29 @@ function MealItem({
 }) {
   const navigation = useNavigation();
 
-  const onPressHandler = () => {
-    navigation.navigate('MealDetails', {
+  function selectMealItemHandler() {
+    navigation.navigate('MealDetail', {
       mealId: id,
     });
-  };
+  }
 
   return (
     <View style={styles.mealItem}>
       <Pressable
         android_ripple={{ color: '#ccc' }}
         style={({ pressed }) => (pressed ? styles.buttonPressed : null)}
-        onPress={onPressHandler}
+        onPress={selectMealItemHandler}
       >
         <View style={styles.innerContainer}>
           <View>
             <Image source={{ uri: imageUrl }} style={styles.image} />
             <Text style={styles.title}>{title}</Text>
           </View>
-          <View style={styles.details}>
-            <MealDetails
-              duration={duration}
-              affordability={affordability}
-              complexity={complexity}
-            />
-          </View>
+          <MealDetails
+            duration={duration}
+            affordability={affordability}
+            complexity={complexity}
+          />
         </View>
       </Pressable>
     </View>
@@ -80,15 +79,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 18,
     margin: 8,
-  },
-  details: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 8,
-  },
-  detailItem: {
-    marginHorizontal: 4,
-    fontSize: 14,
   },
 });
